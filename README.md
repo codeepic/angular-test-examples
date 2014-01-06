@@ -190,3 +190,71 @@ it('should invoke service with right paramaeters', function() {
     $httpBackend.flush();
 });
 ```
+
+## Module checking Controller and making $http request with a service dependent on a different module
+
+```
+/**
+ * [x] Does the AccountabilityCtrl exist.
+ * [x] Load user progress
+ * [] Does the go to rmc function exist
+ */
+
+describe("Module: accountability |", function() {
+    describe("Controllers |", function() {
+        var api, accountability, $httpBackend, scope, ctrl;
+
+        beforeEach(angular.mock.module('gamify'));
+
+        beforeEach(inject(function(Accountability, Api, _$httpBackend_, _$rootScope_, _$controller_) {
+            api = Api;
+            accountability = Accountability;
+            $httpBackend = _$httpBackend_;
+            scope = _$rootScope_.$new();
+            ctrl = _$controller_("AccountabilityCtrl", { $scope: scope });
+        }));
+
+        it('should have a AccountabiltyCtrl', function() {
+            // not really sure this actually does anything.
+            expect(module.AccountabilityCtrl).not.to.equal(null);
+        });
+
+        it('gamify object is hydrated', function() {
+            expect(scope.gamify).to.exist;
+            expect(scope.gamify).to.have.property('card_id');
+            expect(scope.gamify).to.have.property('date');
+        });
+
+        it ('should have a load progress function', function() {
+            expect(scope.loadProgress).to.not.equal(undefined);
+        });
+
+        it ('should have a go to rmc function', function() {
+            expect(scope.goToAccountability).to.not.equal(undefined);
+        });
+
+        it('should load progress', function() {
+            var date = "2013-12-31 21:30:23";
+            var userId = 1;
+            var cardId = 1;
+
+            api.setBase('/api/v2/');
+
+            $httpBackend.expectGET('/api/v2/user/progress/1?date=' + date + '&card_id=' + cardId + '&').respond({
+                completed: 10,
+                caught_up_completed: 3,
+                caught_up: 10,
+                upcoming: 100
+            });
+            scope.loadProgress(userId, date, cardId);
+            $httpBackend.flush();
+
+            expect(scope.progress.completed).to.equal(10);
+            expect(scope.progress.caught_up_completed).to.equal(3);
+            expect(scope.progress.caught_up).to.equal(10);
+            expect(scope.progress.upcoming).to.equal(100);
+            expect(scope.progress.todaysProgress).to.equal(13);
+        });
+    });
+});
+```
