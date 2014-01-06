@@ -167,3 +167,26 @@ describe('service', function() {
   });
 });
 ```
+
+## Service that uses $http
+http://stackoverflow.com/questions/12084410/angularjs-testing-service-method-that-uses-http-service
+
+```
+beforeEach(module('MyApp'));
+beforeEach(inject(function(MyService, _$httpBackend_) {
+    service = MyService;
+    $httpBackend = _$httpBackend_;
+}));
+
+it('should invoke service with right paramaeters', function() {
+    $httpBackend.expectPOST('/foo/bar', {
+        "user": "testUser",
+        "action": "testAction",
+        "object": {}
+    }, function(headers){
+        return headers.Authorization === 'Basic YWxhZGRpbjpvcGVuIHNlc2FtZQ==';
+    }).respond({});
+    service.addStatement('testUser', 'testAction', {});
+    $httpBackend.flush();
+});
+```
