@@ -118,3 +118,49 @@ describe('Module, Service, and Controller', function() {
   });
 });
 ```
+
+http://stackoverflow.com/questions/15927919/using-ngmock-to-simulate-http-calls-in-service-unit-tests
+
+```
+angular.module('myApp.services', [])
+    .factory("exampleService", function ($http) {
+        return {
+            getData: function () {
+                return $http.get("/exampleUrl");
+            }
+        }
+  });
+```
+
+```
+describe('service', function() {
+  var $httpBackend;
+
+  beforeEach(module('myApp.services'));
+
+  beforeEach(inject(function ($injector) {
+    $httpBackend = $injector.get("$httpBackend");
+    $httpBackend.when("GET", "/exampleUrl")
+        .respond(200, {value:"goodValue"});
+  }));
+
+  afterEach(function () {
+    $httpBackend.flush()
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+  });
+
+  describe('exampleService successful http request', function () {
+    it('.value should be "goodValue"', inject(function (exampleService) {
+
+        exampleService.getData().success(function(response) {
+          expect(response.value).toEqual("goodValue");
+        }).error( function(response) {
+          //should not error with $httpBackend interceptor 200 status
+          expect(false).toEqual(true);
+        });
+
+    }));
+  });
+});
+```
