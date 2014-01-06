@@ -67,3 +67,54 @@ describe('service', function() {
   });
 });
 ```
+
+http://stackoverflow.com/questions/20916228/angularjs-what-would-this-look-like-had-it-been-created-tdd-style
+
+```
+describe('Module, Service, and Controller', function() {
+  beforeEach(module('system', function($provide) {
+    api = {
+      get: function(url, params) {},
+      put: function(url, params) {},
+      post: function(url, params) {}
+    };
+  
+    spyOn(api, 'get');
+    spyOn(api, 'put');
+    spyOn(api, 'post');
+  
+    $provide.value('Api', api);
+  }));
+  
+  beforeEach(module('system_centers'));
+
+  beforeEach(inject(function(System) {
+    system = System;
+  }));
+  
+  it('should load the system', function() {
+    system.loadSystem(1, 0);
+    expect(api.get).toHaveBeenCalledWith('lmc/contact/system/1', {card_id : 0});
+  });
+  
+  it('should be able to complete the system', function() {
+    system.completeSystem(20);
+    expect(api.put).toHaveBeenCalledWith('system/complete/20');
+  });
+  
+  it('should create the system', function() {
+    system.createSystem(1, 3);
+    expect(api.post).toHaveBeenCalledWith('contact/system/1', { card_id: 3, type: 'systems', origin: 'lmc'});
+  });
+  
+  it('should not create the system if contact_id is 0', function() {
+    system.createSystem(0, 20);
+    expect(api.post).not.toHaveBeenCalled();
+  });
+  
+  it('should not create the system if card_id is 0', function() {
+    system.createSystem(1, 0);
+    expect(api.post).not.toHaveBeenCalled();
+  });
+});
+```
