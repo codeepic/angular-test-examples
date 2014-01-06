@@ -1,4 +1,7 @@
-## Jasmine Test Examples
+## Mocha and Jasmine Test Examples
+
+You should be able to translate a Jasmine to Mocha and back fairly easily.
+This project is in progress!
 
 ### Controllers
 
