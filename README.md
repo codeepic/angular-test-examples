@@ -1,7 +1,5 @@
 ## Jasmine Test Examples
 
----
-
 ### Controllers
 
 ```
