@@ -197,7 +197,7 @@ it('should invoke service with right paramaeters', function() {
 /**
  * [x] Does the AccountabilityCtrl exist.
  * [x] Load user progress
- * [] Does the go to rmc function exist
+ * [x] Does the go to rmc function exist
  */
 
 describe("Module: accountability |", function() {
