@@ -1,4 +1,7 @@
-# ALL OF THESE TESTS ARE MOVING TO: http://angularjs-tdd.tumblr.com/
+# How to use this repo:
+
+1. Use the search bar above to look for tests.
+2. If we are missing a test please PR and be sure to add keywords to it.
 
 ### Controllers
 
@@ -191,12 +194,6 @@ it('should invoke service with right paramaeters', function() {
 ## Module checking Controller and making $http request with a service dependent on a different module
 
 ```
-/**
- * [x] Does the AccountabilityCtrl exist.
- * [x] Load user progress
- * [x] Does the go to rmc function exist
- */
-
 describe("Module: accountability |", function() {
     describe("Controllers |", function() {
         var api, accountability, $httpBackend, scope, ctrl;
