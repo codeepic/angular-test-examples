@@ -252,3 +252,39 @@ describe("Module: accountability |", function() {
     });
 });
 ```
+
+### Directives with events
+
+```
+describe('directives', function(){
+    var windowMock, scope, controller, element, form;
+  
+    var changeInputValue;
+  
+    beforeEach(function(){ module("myApp.directives"); });
+  
+    beforeEach(function () {
+        inject(function ($compile, $rootScope, $window){
+			scope = $rootScope;
+			element = angular.element('<form name="editForm"><input type="text" name="email" data-ng-model="name" text-box-blur  /></form>');
+			  
+			scope.name="";
+			form = $compile(element)(scope);
+			scope.$digest();
+          
+			windowMock=$window;
+			spyOn(windowMock, "alert");
+          
+			changeInputValue = function (elem, value) {
+				elem.val(value);
+				elem.triggerHandler('blur');
+			};
+        });
+    });
+  
+    it('Should call alert on losing focus', function(){
+		changeInputValue(form.find('input'), "Ravi");
+		expect(windowMock.alert).toHaveBeenCalled();
+	});
+});
+```
